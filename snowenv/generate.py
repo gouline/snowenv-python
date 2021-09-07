@@ -57,7 +57,7 @@ def print_key_assign_info(name: str, user: str, target_dir: str = None):
     """
     _, _, pub_path = _key_paths(name, target_dir)
 
-    with open(pub_path, "r") as f:
+    with open(pub_path, "r", encoding="utf8") as f:
         pubkey = "".join(
             filter(
                 lambda x: not x.startswith("-----"),
