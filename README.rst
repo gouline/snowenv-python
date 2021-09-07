@@ -1,18 +1,15 @@
 snowenv-python
 ##############
 
-.. image:: https://github.com/gouline/snowenv/actions/workflows/master.yml/badge.svg
-    :target: https://github.com/gouline/snowenv/actions/workflows/master.yml
+.. image:: https://github.com/gouline/snowenv-python/actions/workflows/master.yml/badge.svg
+    :target: https://github.com/gouline/snowenv-python/actions/workflows/master.yml
     :alt: GitHub Actions
 .. image:: https://img.shields.io/pypi/v/snowenv
     :target: https://pypi.org/project/snowenv/
     :alt: PyPI
-.. image:: https://pepy.tech/badge/snowenv
-    :target: https://pepy.tech/project/snowenv
-    :alt: Downloads
-.. image:: https://black.readthedocs.io/en/stable/_static/license.svg
-    :target: https://github.com/gouline/snowenv/blob/master/LICENSE
-    :alt: License: MIT
+.. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
+    :target: https://github.com/gouline/snowenv-python/blob/master/LICENSE
+    :alt: License: Apache 2.0
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
     :alt: Code style: black
