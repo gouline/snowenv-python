@@ -21,8 +21,7 @@ check-lint:
 .PHONY: check-lint
 
 check-type:
-	# TODO: shouldn't have to pass --ignore-missing-imports, why pyproject.toml ignored?
-	mypy snowenv --ignore-missing-imports
+	mypy snowenv
 .PHONY: check-type
 
 check: check-fmt check-lint check-type

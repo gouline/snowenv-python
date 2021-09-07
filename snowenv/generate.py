@@ -1,32 +1,32 @@
 import os
 from pathlib import Path
-from typing import Tuple
+from typing import Optional, Tuple
 
 from .utils import shell
 
 DEFAULT_KEY_PATH = Path.home() / ".ssh"
 
 
-def _key_paths(name: str, dir: str = str(DEFAULT_KEY_PATH)) -> Tuple[str, str, str]:
-    path = Path(os.path.expanduser(dir))
+def _key_paths(name: str, target_dir=str(DEFAULT_KEY_PATH)) -> Tuple[Path, Path, Path]:
+    path = Path(os.path.expanduser(target_dir))
     prv_path = path / f"{name}.p8"
     pub_path = path / f"{name}.pub"
     return (path, prv_path, pub_path)
 
 
-def generate_key(name: str, dir: str = None):
+def generate_key(name: str, target_dir: Optional[str] = None):
     """Generates private and public key files.
 
     Args:
         name (str): Name of the key.
-        dir (str, optional): Target key directory. Defaults to ~/.ssh.
+        target_dir (str, optional): Target key target_directory. Defaults to ~/.ssh.
     """
 
-    path, prv_path, pub_path = _key_paths(name, dir)
+    path, prv_path, pub_path = _key_paths(name, target_dir)
 
     if prv_path.is_file() != pub_path.is_file():
         raise ValueError(
-            f"Found private OR public key only for {name} in {dir}, delete to re-generate"
+            f"Found private OR public key only for {name} in {target_dir}, delete to re-generate"
         )
 
     os.makedirs(path, exist_ok=True)
@@ -47,15 +47,15 @@ def generate_key(name: str, dir: str = None):
             raise ValueError(f"Return code {retcode} received from openssl")
 
 
-def print_key_assign_info(name: str, user: str, dir: str = None):
+def print_key_assign_info(name: str, user: str, target_dir: str = None):
     """Prints instructions on assigning key to your Snowflake account.
 
     Args:
         name (str): Name of the key.
         user (str): Snowflake user.
-        dir (str, optional): Target key directory. Defaults to ~/.ssh.
+        target_dir (str, optional): Target key target_directory. Defaults to ~/.ssh.
     """
-    _, _, pub_path = _key_paths(name, dir)
+    _, _, pub_path = _key_paths(name, target_dir)
 
     with open(pub_path, "r") as f:
         pubkey = "".join(
