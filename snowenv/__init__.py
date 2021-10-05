@@ -1,9 +1,10 @@
 import os
+import jinja2
 from pathlib import Path
 from typing import Optional
 from dotenv import load_dotenv
 from snowflake.connector import SnowflakeConnection
-
+from ruamel.yaml import YAML
 from .connector import connect
 
 
@@ -49,4 +50,37 @@ def connect_dbt(
         SnowflakeConnection: Opened Snowflake connection.
     """
 
-    raise ValueError(f"Not implemented: {profile}, {target}, {path}")
+    with open(str(path), mode="r", encoding="utf-8") as f:
+        body_template = jinja2.Template(f.read())
+        body_rendered = body_template.render(
+            env_var=os.getenv,
+        )
+
+    yaml = YAML(typ="safe")
+    profiles = yaml.load(body_rendered)
+
+    if profile not in profiles:
+        raise ValueError(f"No profile '{profile}' found in '{path}'")
+
+    profile_dict = profiles.get(profile)
+    profile_target = target or profile_dict.get("target")
+    if not profile_target:
+        raise ValueError("No target supplied or specified in profile")
+
+    output = profile_dict.get("outputs", {}).get(profile_target)
+    if not output:
+        raise ValueError(f"No output for profile '{profile}' target '{profile_target}'")
+    if output.get("type") != "snowflake":
+        raise ValueError(f"Profile '{profile}' target '{profile_target}' not Snowflake")
+
+    return connect(
+        account=output.get("account"),
+        user=output.get("user"),
+        password=output.get("password"),
+        private_key_path=output.get("private_key_path"),
+        private_key_passphrase=output.get("private_key_passphrase"),
+        role=output.get("role"),
+        database=output.get("database"),
+        warehouse=output.get("warehouse"),
+        schema=output.get("schema"),
+    )
